@@ -22,9 +22,14 @@ data_file = open(sys.argv[2])
 data_list = data_file.readlines()
 data_file.close()
 
+test_file = open("mnist_test.csv")
+test_list = test_file.readlines()
+test_file.close()
+
 def train():
-    i = 10
+    i = 100
     for e in range(i):
+        print("----------Epoch numero: ", e, "----------")
         for record in data_list:
             all_values = record.split(',')
             #On ramène les valeurs de 0-255 à 0.1-1.0
@@ -34,10 +39,10 @@ def train():
             targets = numpy.zeros(output_nodes) + 0.01
             # on met 0.99 à la valeur qui correspond à la bonne réponse
             targets[int(all_values[0])] = 0.99
-            print("label", all_values[0])
             n.train(scaled_input, targets)
-            pass
         pass
+        run()
+    pass
     numpy.savetxt("who.csv", n.who, delimiter=",")
     numpy.savetxt("wih.csv", n.wih, delimiter=",")
 
@@ -51,25 +56,23 @@ def run():
         n.wih = genfromtxt('wih.csv', delimiter=',')
 
     scorecard = []
-    for record in data_list:
+    for record in test_list:
         all_values = record.split(',')
         correct_label = int(all_values[0])
         inputs = (numpy.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01
         outputs = n.query(inputs)
-        print(outputs)
+        #print(outputs)
         label = numpy.argmax(outputs)
-        print("-----label ", label)
-        print("-----Correct label ", correct_label, "\n")
+        #print("-----label ", label)
+        #print("-----Correct label ", correct_label, "\n")
 
         if (label == correct_label):
-            # network's answer matches correct answer, add 1 to scorecard
             scorecard.append(1)
         else:
-            # network's answer doesn't match correct answer, add 0 to scorecard
             scorecard.append(0)
             pass
         pass
-    print(scorecard)
+    #print(scorecard)
     scorecard_array = numpy.asarray(scorecard)
     print ("performance = ", scorecard_array.sum() / scorecard_array.size)
 
