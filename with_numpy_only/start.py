@@ -27,7 +27,7 @@ test_list = test_file.readlines()
 test_file.close()
 
 def train():
-    i = 100
+    i = 10
     for e in range(i):
         print("----------Epoch numero: ", e, "----------")
         for record in data_list:
