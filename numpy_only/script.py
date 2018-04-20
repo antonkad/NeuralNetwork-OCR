@@ -19,9 +19,21 @@ class neuralNetwork:
 
         self.lr = learningrate
 
-        #Activation function
         self.activation_function = lambda x: scipy.special.expit(x)
         pass
+
+    # Sigmoid, special case of the logistic function (0,1)
+    def sigmoid(x): # sigmoid(x) = 1/(1+exp(-x))
+        return scipy.special.expit(x)
+
+    # Gradiant stronger than sigmoid (-1,1)
+    def tanh(x): # tanh(x) = 2/(1+exp(-2x)) -1  =>  tanh(x) = 2sigmoid(2x) - 1
+        return np.tanh(x)
+
+    # less computationally expensive (0,inf)
+    def relu(x):
+        return np.maximum(x, 0)
+
 
     def train(self, inputs_list, targets_list):
         #Convertir en tableau à dimention
