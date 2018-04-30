@@ -19,21 +19,28 @@ class neuralNetwork:
 
         self.lr = learningrate
 
-        self.activation_function = lambda x: scipy.special.expit(x)
+        self.activation_function = sigmoid
+        self.activation_function_deriv = sigmoid_deriv
+
         pass
 
     # Sigmoid, special case of the logistic function (0,1)
     def sigmoid(x): # sigmoid(x) = 1/(1+exp(-x))
         return scipy.special.expit(x)
+    def sigmoid_deriv(x):
+        return sigmoid(x)*(1 - sigmoid(x))
 
     # Gradiant stronger than sigmoid (-1,1)
     def tanh(x): # tanh(x) = 2/(1+exp(-2x)) -1  =>  tanh(x) = 2sigmoid(2x) - 1
         return np.tanh(x)
+    def tanh_deriv(x):
+        return 1.0 - np.tanh(x)**2
 
     # less computationally expensive (0,inf)
     def relu(x):
         return np.maximum(x, 0)
-
+    def relu_deriv(x):
+        return 1 * (x > 0)
 
     def train(self, inputs_list, targets_list):
         #Convertir en tableau à dimention
@@ -55,8 +62,10 @@ class neuralNetwork:
         hidden_errors = numpy.dot(self.who.T, output_errors)
 
         #Update des poids
-        self.who += self.lr * numpy.dot((output_errors * final_outputs * (1.0 - final_outputs)), numpy.transpose(hidden_outputs))
-        self.wih += self.lr * numpy.dot((hidden_errors * hidden_outputs * (1.0 - hidden_outputs)), numpy.transpose(inputs))
+        #self.who += self.lr * numpy.dot((output_errors * final_outputs * (1.0 - final_outputs)), numpy.transpose(hidden_outputs))
+        self.who += self.lr * numpy.dot((output_errors * self.activation_function_deriv(final_inputs)), numpy.transpose(hidden_outputs))
+        #self.wih += self.lr * numpy.dot((hidden_errors * hidden_outputs * (1.0 - hidden_outputs)), numpy.transpose(inputs))
+        self.wih += self.lr * numpy.dot((hidden_errors * self.activation_function_deriv(hidden_inputs)), numpy.transpose(inputs))
 
         #for index, value in enumerate(final_outputs):
         #    print(index, ' ', value)
