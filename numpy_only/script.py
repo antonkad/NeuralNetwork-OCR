@@ -1,5 +1,5 @@
-import numpy
-import scipy.special
+import numpy as np
+import scipy.special as scipy
 
 
 class neuralNetwork:
