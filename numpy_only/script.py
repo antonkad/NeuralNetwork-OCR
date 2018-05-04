@@ -42,6 +42,10 @@ class neuralNetwork:
     def relu_deriv(x):
         return 1 * (x > 0)
 
+    def softmax(X):
+        exps = np.exp(X)
+        return exps / np.sum(exps)
+
     def train(self, inputs_list, targets_list):
         #Convertir en tableau à dimention
         inputs = numpy.array(inputs_list, ndmin=2).T
